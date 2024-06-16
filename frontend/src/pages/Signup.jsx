@@ -3,14 +3,35 @@ import { Button } from "../Components/Button";
 import Heading from "../Components/Heading";
 import { InputBox } from "../Components/Inputbox";
 import Subheading from "../Components/Subheading";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from 'axios'
+import { useNavigate } from "react-router-dom";
 export default function Signup() {
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate()
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const response = await axios.get('http://localhost:3000/api/v1/user/me', {
+                    headers: {
+                        "Authorization": "Bearer " + localStorage.getItem("token")
+                    }
+                });
+
+                if (response.status == "200") {
+
+                    navigate("/dashboard");
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error.response ? error.response.data : error.message);
+            }
+        }
+        fetchData();
+    }, []);
 
     return (
         <div className="bg-slate-300 h-screen flex justify-center">

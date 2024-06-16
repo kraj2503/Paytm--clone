@@ -151,8 +151,9 @@ router.get('/bulk', async (req, res) => {
 })
 
 
-router.get("/", authMiddleware, (req, res) => {
-    res.json({
+
+router.get("/me", authMiddleware, (req, res) => {
+    res.status(200).json({
         "auth": "verified"
     })
 })
