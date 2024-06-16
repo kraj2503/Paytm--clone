@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const mongoid = require("./config")
+const {mongoid} = require("./config")
 mongoose.connect(mongoid)
 
 const userSchema = new mongoose.Schema({
