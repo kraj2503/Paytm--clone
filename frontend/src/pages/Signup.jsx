@@ -13,6 +13,8 @@ export default function Signup() {
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate()
+    const [verified, setVerifed] = useState(false)
+    const [error, setError] = useState("");
     useEffect(() => {
         async function fetchData() {
             try {
@@ -31,7 +33,7 @@ export default function Signup() {
             }
         }
         fetchData();
-    }, []);
+    }, [verified]);
 
     return (
         <div className="bg-slate-300 h-screen flex justify-center">
@@ -60,16 +62,23 @@ export default function Signup() {
 
                     <div className="pt-4">
                         <Button onClick={async () => {
-                            const response = await axios.post("http://localhost:3000/api/v1/user/signup", {
-                                userName,
-                                firstName,
-                                lastName,
-                                password
-                            });
-                            localStorage.setItem("token", response.data.token)
+                            try {
+                                const response = await axios.post("http://localhost:3000/api/v1/user/signup", {
+                                    userName,
+                                    firstName,
+                                    lastName,
+                                    password
+                                });
+                                localStorage.setItem("token", response.data.token);
+                                navigate("/dashboard");
+                            } catch (error) {
+                                setError(error.response ? error.response.data.message : error.message); // Set error message
+                            }
                         }} label={"Sign up"} />
-
                     </div>
+
+                    {error && <p className="text-red-500 text-sm mt-2">{error}</p>} {/* Display error message */}
+
                     <div>
                         <Bottomwarning label={"Already have an account?"} buttonText={"Sign in"} to={"/signin"} />
                     </div>

@@ -1,4 +1,5 @@
 export function AppBar({username}){
+    
     return (
         <div className="flex justify-between h-14 shadow">
         <div className="flex flex-col justify-center h-full ml-4 font-bold text-xl">

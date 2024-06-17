@@ -53,7 +53,9 @@ router.post("/signup", async (req, res) => {
         balance: 1 + Math.random() * 10000
     })
 
-    const token = jwt.sign({ userId }, JWT_SECRET);
+    const token = jwt.sign({ userId }, JWT_SECRET,{
+        expiresIn: '365d'
+    });
     if (user) {
         res.json({
             userId: "userId of newly added user",
@@ -68,29 +70,42 @@ router.post("/signup", async (req, res) => {
 router.post("/signin", async (req, res) => {
     const body = req.body;
     const { success } = signInSchema.safeParse(body);
-    if (!success) {
-        res.status(411).json({
-            message: "Error while logging in"
-        })
-    };
-    const user = await User.findOne({
-        userName: req.body.userName,
-        password: req.body.password
-    });
 
-    if (user) {
-        const token = jwt.sign({ userId: user._id }, JWT_SECRET)
+    if (!success) {
+        return res.status(400).json({
+            message: "Invalid input data"
+        });
+    }
+
+    try {
+        const { userName, password } = req.body;
+
+        // Check if the user exists in the database
+        const user = await User.findOne({ userName, password });
+
+        if (!user) {
+            return res.status(401).json({
+                message: "Incorrect Username/Password"
+            });
+        }
+
+        // If user exists, generate JWT token
+        const token = jwt.sign({ userId: user._id }, JWT_SECRET,{
+            expiresIn: '365d'
+        });
+
+        // Send the token in the response
         res.json({
             token: token
-        })
-        return;
+        });
+
+    } catch (error) {
+        console.error("Error signing in:", error);
+        res.status(500).json({
+            message: "Internal Server Error"
+        });
     }
-    res.status(411).json({
-
-        message: "Error while logging in"
-
-    })
-})
+});
 
 const updateBody = zod.object({
     password: zod.string().optional(),
@@ -122,11 +137,12 @@ router.put('/', authMiddleware, async (req, res) => {
     })
 })
 
-router.get('/bulk', async (req, res) => {
+router.get('/bulk', authMiddleware,async (req, res) => {
     const filter = req.query.filter || "";
-
+    const authenticatedUserId = req.userId;
 
     const user = await User.find({
+        _id: { $ne: authenticatedUserId },
         $or: [{
             firstName: {
                 "$regex": filter,
@@ -142,10 +158,10 @@ router.get('/bulk', async (req, res) => {
 
     res.json({
         user: user.map(user => ({
+            _id: user._id,
             userName: user.userName,
             firstName: user.firstName,
-            lastname: user.lastName,
-            _id: user._id
+            lastName: user.lastName,
         }))
     })
 })

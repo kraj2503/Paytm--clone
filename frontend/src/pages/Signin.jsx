@@ -1,4 +1,4 @@
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import { Bottomwarning } from "../Components/Bottomwarning";
 import { Button } from "../Components/Button";
 import Heading from "../Components/Heading";
@@ -9,7 +9,9 @@ import { useNavigate } from "react-router-dom";
 
 export default function Signin() {
 
-
+    const [userName, setUserName] = useState("")
+    const [password, setPassword] = useState("")
+    const [error, setError] = useState()
     const [loading, setLoading] = useState(true)
     const navigate = useNavigate()
     useEffect(() => {
@@ -28,7 +30,7 @@ export default function Signin() {
             } catch (error) {
                 console.error('Error fetching data:', error.response ? error.response.data : error.message);
                 setLoading(false);
-                
+
             }
         }
 
@@ -51,11 +53,31 @@ export default function Signin() {
 
                     <Heading label={"Sign In"} />
                     <Subheading label={"Enter your credentials to access your account"} />
-                    <InputBox placeholder={"Johndoe@mail.com"} label={"Email"} />
-                    <InputBox placeholder={"**********"} label={"Password"} />
+                    <InputBox placeholder={"Johndoe@mail.com"} label={"Email"} onChange={(e) => {
+                        setUserName(e.target.value)
+                    }} />
+                    <InputBox placeholder={"**********"} label={"Password"} onChange={(e) => {
+                        setPassword(e.target.value)
+                    }} />
                     <div className=" pt-4">
 
-                        <Button label={"Sign In"} />
+                        <Button label={"Sign In"} onClick={async () => {
+
+                            try {
+
+                                const response = await axios.post("http://localhost:3000/api/v1/user/signin", {
+                                    userName,
+                                    password
+                                })
+                                localStorage.setItem("token", response.data.token);
+                                navigate("/dashboard")
+                            }
+                            catch (error) {
+                                setError(error.response ? error.response.data.message : error.message); // Set error message
+                            }
+                        }} />
+                        {error && <p className="text-red-500 text-sm mt-2">{error}</p>} {/* Display error message */}
+
                         <Bottomwarning label={"Dont have an account?"} buttonText={"Sign Up"} to={"/signup"} />
                     </div>
 
