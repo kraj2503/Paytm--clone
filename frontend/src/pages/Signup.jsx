@@ -7,11 +7,11 @@ import { useEffect, useState } from "react";
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 export default function Signup() {
-
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
+    const [Pass, setPass] = useState(false);
     const navigate = useNavigate()
     const [verified, setVerifed] = useState(false)
     const [error, setError] = useState("");
@@ -59,9 +59,10 @@ export default function Signup() {
                     <InputBox onChange={e => {
                         setPassword(e.target.value)
                     }} placeholder="**********" label={"Password"} />
-
+                    {(password.length < 8) && Pass && <p className="text-gray-600 text-md mt-2">{"Minimum password length -> 8"}</p>}
                     <div className="pt-4">
                         <Button onClick={async () => {
+                            setPass(true);
                             try {
                                 const response = await axios.post("http://localhost:3000/api/v1/user/signup", {
                                     userName,
@@ -88,4 +89,5 @@ export default function Signup() {
 
         </div>
     )
+
 }

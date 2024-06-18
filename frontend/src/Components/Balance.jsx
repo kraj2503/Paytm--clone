@@ -1,12 +1,8 @@
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Logout from "./Logout";
 
 export function Balance({ value }) {
-   const navigate = useNavigate();
-    function logout(){
-    localStorage.removeItem('token');
-    navigate('/signin')
-   }
-   
+
     return (
         <div className="flex justify-between">
             <div className="flex font-bold text-lg">
@@ -15,8 +11,8 @@ export function Balance({ value }) {
                     Rs. {value}
                 </div>
             </div>
-                <button onClick={logout} className="border px-2 py-1 font-medium rounded bg-slate-50 hover:bg-slate-200">Log out</button>
-
+            <Logout />
         </div>
     )
+
 }

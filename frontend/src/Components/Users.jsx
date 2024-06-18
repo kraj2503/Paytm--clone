@@ -33,8 +33,8 @@ export const Users = () => {
     }, [debouncedFilter]);
     return <>
         <div className="font-bold mt-6 text-lg">
-            Users 
-           
+            Users
+
         </div>
         <div className="my-2">
             <input onChange={(e) => {
