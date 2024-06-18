@@ -5,25 +5,43 @@ const { authMiddleware } = require("../middleware");
 const router = express.Router();
 const mongoose = require("mongoose")
 
-
 router.get('/balance', authMiddleware, async (req, res) => {
+    try {
+        const account = await Account.findOne({
+            userId: req.userId
+        });
+        const user = await User.findOne({
+            _id: account.userId
+        })
+        // (account);
+        // (user.firstName);
 
-    const account = await Account.findOne({
-        userId: req.userId
-    });
-    
-    res.json({
-        balance: account.balance
-    })
-})
+        res.json({
+            balance: account.balance,
+            firstName: user.firstName
+        })
+    }
+    catch (error) {
+        console.error("Error Getting Balance", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+
+}
+)
 
 router.post('/transfer', authMiddleware, async (req, res) => {
     const session = await mongoose.startSession();
 
     session.startTransaction();
     const { amount, to } = req.body;
-    console.log(amount, to);
 
+    if (amount <= 0) {
+        await session.abortTransaction();
+        return res.status(400).json({
+            "message": "Invalid amount"
+        })
+
+    }
     const account = await Account.findOne({ userId: req.userId }).session(session);
 
 
@@ -46,19 +64,20 @@ router.post('/transfer', authMiddleware, async (req, res) => {
         })
     }
 
-    
+
     await Account.updateOne(
         { userId: req.userId },
         { $inc: { balance: -amount } }
 
     ).session(session)
     await Account.updateOne(
-        { userId: to},
+        { userId: to },
         { $inc: { balance: amount } }
 
     ).session(session)
     await session.commitTransaction();
     console.log("Transfer successful");
+    console.log(amount + "transferred to" + to);
 
 
     res.json({

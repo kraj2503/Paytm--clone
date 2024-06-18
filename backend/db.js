@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
-const {mongoid} = require("./config")
+const { mongoid } = require("./config")
+const bcrypt = require("bcryptjs");
 mongoose.connect(mongoid)
 
 const userSchema = new mongoose.Schema({
@@ -15,7 +16,7 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        minLength: 6
+        minLength: 8
     },
     firstName: {
         type: String,
@@ -30,6 +31,13 @@ const userSchema = new mongoose.Schema({
         maxLength: 50
     }
 });
+userSchema.pre('save', async function (next) {
+    const user = this;
+    if (user.isModified('password')) {
+        user.password = await bcrypt.hash(user.password, 10);
+    }
+    next();
+});
 
 const User = mongoose.model('user', userSchema);
 
@@ -43,7 +51,6 @@ const accountSchema = new mongoose.Schema({
         required: true
     }
 })
-
 
 const Account = mongoose.model('Account', accountSchema)
 
