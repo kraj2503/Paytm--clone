@@ -55,7 +55,7 @@ export default function Signin() {
                     <InputBox placeholder={"Johndoe@mail.com"} label={"Email"} onChange={(e) => {
                         setUserName(e.target.value)
                     }} />
-                    <InputBox placeholder={"**********"} label={"Password"} onChange={(e) => {
+                    <InputBox type={"password"} placeholder={"**********"} label={"Password"} onChange={(e) => {
                         setPassword(e.target.value)
                     }} />
                     <div className=" pt-4">

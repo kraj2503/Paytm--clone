@@ -56,7 +56,7 @@ export default function Signup() {
                     }} placeholder="Johndoe@mail.com" label={"Email"} />
 
 
-                    <InputBox onChange={e => {
+                    <InputBox type={"password"} onChange={e => {
                         setPassword(e.target.value)
                     }} placeholder="**********" label={"Password"} />
                     {(password.length < 8) && Pass && <p className="text-gray-600 text-md mt-2">{"Minimum password length -> 8"}</p>}
