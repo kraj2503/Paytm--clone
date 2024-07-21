@@ -31,6 +31,7 @@ const userSchema = new mongoose.Schema({
         maxLength: 50
     }
 });
+
 userSchema.pre('save', async function (next) {
     const user = this;
     if (user.isModified('password')) {

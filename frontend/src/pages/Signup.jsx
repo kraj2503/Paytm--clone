@@ -13,7 +13,8 @@ export default function Signup() {
     const [password, setPassword] = useState("");
     const [Pass, setPass] = useState(false);
     const navigate = useNavigate()
-    const [verified, setVerifed] = useState(false)
+    // const [verified, setVerifed] = useState(false)
+    const verified = false
     const [error, setError] = useState("");
     useEffect(() => {
         async function fetchData() {
