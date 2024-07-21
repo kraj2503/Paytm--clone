@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom";
 import Logout from "./Logout";
 
+// eslint-disable-next-line react/prop-types
 export function Balance({ value }) {
 
     return (

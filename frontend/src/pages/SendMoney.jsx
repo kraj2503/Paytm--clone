@@ -1,9 +1,9 @@
-import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
+import {  useNavigate, useSearchParams } from 'react-router-dom';
 import axios from "axios";
 import { useState, useEffect } from 'react';
 import CSpinner from '../Components/CSpinner';
-import { Button } from '../Components/Button';
 import Logout from '../Components/Logout';
+import { BACKEND_URL } from '../config';
 export const SendMoney = () => {
     const [searchParams] = useSearchParams();
     const id = searchParams.get("id");
@@ -19,7 +19,7 @@ export const SendMoney = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await axios.get('http://localhost:3000/api/v1/user/me', {
+                const response = await axios.get(`${BACKEND_URL}/api/v1/user/me`, {
                     headers: {
                         "Authorization": "Bearer " + localStorage.getItem("token")
                     }
@@ -97,7 +97,7 @@ export const SendMoney = () => {
                                 setError("")
                                 try {
                                     setTransferResponse("")
-                                    const response = await axios.post("http://localhost:3000/api/v1/account/transfer", {
+                                    const response = await axios.post(`${BACKEND_URL}/api/v1/account/transfer`, {
                                         to: id,
                                         amount
                                     }, {

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 export function InputBox({ label, placeholder, onChange, type}) {
     return <div>
         <div className="text-sm font-medium text-left py-2 ">

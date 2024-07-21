@@ -4,6 +4,7 @@ import { Balance } from "../Components/Balance";
 import { Users } from "../Components/Users";
 import { useEffect, useState } from "react";
 import axios from 'axios';
+import { BACKEND_URL } from "../config";
 
 export function Dashboard() {
     const [loading, setLoading] = useState(true)
@@ -13,7 +14,7 @@ export function Dashboard() {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await axios.get('http://localhost:3000/api/v1/account/balance', {
+                const response = await axios.get(`${BACKEND_URL}/api/v1/account/balance`, {
                     headers: {
                         "Authorization": "Bearer " + localStorage.getItem("token")
                     }

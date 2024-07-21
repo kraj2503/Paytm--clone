@@ -6,6 +6,7 @@ import { InputBox } from "../Components/Inputbox";
 import Subheading from "../Components/Subheading";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../config";
 
 export default function Signin() {
     const [userName, setUserName] = useState("")
@@ -16,7 +17,7 @@ export default function Signin() {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await axios.get('http://localhost:3000/api/v1/user/me', {
+                const response = await axios.get(`${BACKEND_URL}/api/v1/user/me`, {
                     headers: {
                         "Authorization": "Bearer " + localStorage.getItem("token")
                     }
@@ -64,7 +65,7 @@ export default function Signin() {
 
                             try {
 
-                                const response = await axios.post("http://localhost:3000/api/v1/user/signin", {
+                                const response = await axios.post(`${BACKEND_URL}/api/v1/user/signin`, {
                                     userName,
                                     password
                                 })

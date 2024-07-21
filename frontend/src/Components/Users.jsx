@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react"
 import { Button } from "./Button"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { BACKEND_URL } from "../config";
 
 export const Users = () => {
     // Replace with backend call
@@ -22,7 +23,7 @@ export const Users = () => {
     }, [filter]);
 
     useEffect(() => {
-        axios.get("http://localhost:3000/api/v1/user/bulk?filter=" + debouncedFilter, {
+        axios.get(`${BACKEND_URL}/api/v1/user/bulk?filter=` + debouncedFilter, {
             headers: {
                 "Authorization": "Bearer " + localStorage.getItem("token")
             }
@@ -65,7 +66,7 @@ function User({ user }) {
         </div>
 
         <div className="flex flex-col justify-center h-ful">
-            <Button onClick={(e) => {
+            <Button onClick={() => {
                 navigate("/send?id=" + user._id + "&name=" + user.firstName);
             }} label={"Send Money"} />
         </div>
